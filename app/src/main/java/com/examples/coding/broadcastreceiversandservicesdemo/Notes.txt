@@ -1,0 +1,81 @@
+- Broadcast Receivers
+    - The Component used by android to send signals across the system
+    - DOES NOT PERSIST THE SIGNAL (data sent)
+    - 2 Types
+        - Manifest Declared
+            - Declared within the manifest
+            - Will be activated if a signal is sent with correlating action string
+            - Intent filter for the actions are defined within manifest
+            - Implicit Manifest Declared receivers are NOT allowed as of SDK 26
+        - Context Registered
+            - Declared within the component's source code which it is attached to
+            - Only active if that component is actively loaded into memory
+            - Intent filters are defined within the source code
+            - MUST register and unregister in onStart and onStop
+    - All signals are received and processed within the receivers onReceive method(function)
+    - Broadcast receivers can be restricted in 2 ways
+        - LocalBroadcastManager
+            - restrict broadcast to within the host app itself
+        - Permissions
+            - Permission is assigned when sending broadcast, and only apps with that permission can
+                receive it
+
+- Services
+    - The component used by android for long running operations
+    - Types of services
+        - Started Serviced
+            - The service will run once started until task is complete, then will stop unless stopped
+                manually
+            - Kinds of started (an bub category of services)
+                - Foreground Services
+                    - Used when app is within the foreground of operation
+                    - As of SDK 23, Must display a notification in the Notification Menu that it is running
+                    - Runs on Main thread by default
+                - Background Services
+                    - Used when the app is running an operation that the user may not need to know about explicitly
+                    - As of SDK 23, can not be run by application that is not in the foreground for more than 5 seconds
+                    - Runs on Main Thread by default
+                - Intent Services (sub type of Background)
+                    - Used when you need an operation that is not associated to Main thread
+                    - Used Intent actions/filters to define the task that will be performed by the service
+                    - Request to intent services run sequentially
+                    - Runs on worker thread by default
+        - Bound Services
+            - One Kind
+                - Bound Services
+                    - Service will run once bound to until that service is unbounded
+                    - Uses a client/Server relationship
+                    - Runs on Main Thread by default
+                    - Can be interacted with when running
+                    - Uses the ServiceConnection object for communication between the component which
+                        the service is bound to and the service itself
+                    - Usually some sort of IPC(Interprocces communication) is supplied
+                        - Binder/IBinder
+                        - Messenger
+    - To change the thread that process will run on other than set by default, you can you the
+        "android:process" attribute for service in the manifest to whatever scheme you wish
+    - If you have a task that is long running and needs to be completed at a later time, or if you have a
+        task that needs to happen periodically you need to use some form of Intelligent Job Scheduling
+        - Commonly used Intelligent Job Scheduling
+            - Job Schedulers
+                - Used when you have a task that needs to run periodically (Updates)
+            - Work Managers
+                - JetPack Component
+                - Simplified Job Scheduler
+            - Download Manager
+                - Used to download files
+            - Alarm Manager
+                - Used to run a task at a specific time
+
+    - Lifecycle of Services
+        - Started Service
+            onCreate
+            onStartCommand
+            onStop
+            onDestroy
+
+        - Bound Serives
+            onCreate
+            onBind
+            onUnbind
+            onDestroy
